@@ -43,19 +43,22 @@ def gameTick():
 
 def mainLoop():
     global tela
-    cv2.setMouseCallback(TITULO, add_entity)
+    cv2.setMouseCallback(TITULO, mouseEvents)
     while True:
         gameTick()
+        tela = cv2.resize(tela, (400, 400), interpolation=cv2.INTER_AREA)
         cv2.imshow(TITULO, tela)
         if cv2.waitKey(1) == 113:  # pressione Q para fechar
             cv2.destroyAllWindows()
             break
 
 
-def add_entity(event, x, y, flags, param):
+def mouseEvents(event, x, y, flags, param):
     global arrastando
     global resolution
     global tela
+    x = int(x/4)
+    y = int(y/4)
     if 0 < x < resolution[1] and 0 < y < resolution[0]:
         if event == cv2.EVENT_LBUTTONDOWN:
             arrastando = True
@@ -72,9 +75,10 @@ def add_entity(event, x, y, flags, param):
 if __name__ == "__main__":
     TITULO = "PY 2D ENGINE"
     arrastando = False
-    resolution = [400, 400]
+    resolution = [100, 100]
     entityList = []
     cv2.namedWindow(TITULO, cv2.WINDOW_AUTOSIZE)
     tela = np.zeros([resolution[0], resolution[1], 3])
+    tela = cv2.resize(tela, (400, 400), interpolation=cv2.INTER_AREA)
     cv2.imshow(TITULO, tela)
     mainLoop()
